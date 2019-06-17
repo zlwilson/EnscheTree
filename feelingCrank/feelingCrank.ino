@@ -9,7 +9,7 @@ int revolutions;
 int sensorVals[10];
 
 int modernCount = 0;
-int feelingCount = 0;
+int uniqueCount = 0;
 
 bool isActivated;
 
@@ -74,7 +74,7 @@ void loop() {
         stateChangeCounter = 0;
 
         // Serial output for Processing script
-        Serial.println("U"); // "U" for uniqueness crank
+        Serial.println("F"); // "U" for uniqueness crank
 
         loopPulse();
       }
@@ -91,7 +91,7 @@ void loop() {
         stateChangeCounter = 0;
 
         // Serial output for Processing script
-        Serial.println("U"); // "U" for uniqueness crank
+        Serial.println("F"); // "U" for uniqueness crank
 
         loopPulse();
       }
@@ -131,10 +131,10 @@ void updateRevolutions(char received) {
         modernCount = 1;
       }
       break;
-    case 'F': // feeling rotation
-      feelingCount++;
-      if (feelingCount > threshold) {
-        feelingCount = 1;
+    case 'U': // uniqueness rotation
+      uniqueCount++;
+      if (uniqueCount > threshold) {
+        uniqueCount = 1;
       }
       break;
     default:
@@ -154,11 +154,6 @@ void checkIfActivated() {
   }
 }
 
-// TODO:
-// map modernity to speed, uniqueness to size, feeling to color
-// DELAYVAL = speed
-// color = color
-// ?? = size
 void loopPulse() {
   updateDelay();
   updateColor();
@@ -176,18 +171,19 @@ void loopPulse() {
   pixels.clear();
 }
 
-void updatePulseSize() {
-  pulseSize = threshold - (revolutions % threshold);
-}
-
-// for Time crank
-void updateDelay() {
-  DELAYVAL = 2 * (threshold - (modernCount % threshold));
-}
-
-// for feeling crank, using feeling count
+// TODO: fix colors?!?!!
 void updateColor() {
   color[0] = 255;
   color[1] = 0;
   color[2] = 0;
+}
+
+// from Unique crank
+void updatePulseSize() {
+  pulseSize = threshold - (uniqueCount % threshold);
+}
+
+// from Time crank
+void updateDelay() {
+  DELAYVAL = 2 * (threshold - (modernCount % threshold));
 }
